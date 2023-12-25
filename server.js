@@ -27,7 +27,7 @@ function verifyCallback(accessToken, refreshToken, profile, done){
   done(null, profile);
 }
 
-passport.use(new Strategy(AUTH_OPTIONS, verifyCallback);
+passport.use(new Strategy(AUTH_OPTIONS, verifyCallback));
 
 const app = express();
 
@@ -45,7 +45,10 @@ function checkLoggedIn(req, res, next) {
   next();
 }
 
-app.get('/auth/google', (req, res) => {});
+app.get('/auth/google', 
+  passport.authenticate("google", {
+    scope: ["email"]
+  }));
 
 app.get('/auth/google/callback', 
   passport.authenticate("google", {
@@ -64,7 +67,7 @@ app.get('/secret', checkLoggedIn, (req, res) => {
   res.send("The secret value is 42!");
 });
 
-app.get("/", (req, res) => {
+app.get("/failure", (req, res) => {
   return res.send("Failed to log in!");
 });
 
