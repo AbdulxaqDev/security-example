@@ -27,6 +27,8 @@ const AUTH_OPTIONS = {
 } 
 
 function verifyCallback(accessToken, refreshToken, profile, done){
+  console.log("access token:", accessToken);
+  console.log("refresh token:", refreshToken);
   console.log("Google profile:", profile);
   done(null, profile);
 }
@@ -47,7 +49,7 @@ app.use(helmet());
 
 app.use(cookieSession({
   name: "session",
-  maxAge: 24 * 60 * 60 * 1000,
+  maxAge: 5 * 60 * 1000,
   keys: [config.COOKIE_KEY_1, config.COOKIE_KEY_2],
 }))
 
@@ -66,7 +68,9 @@ function checkLoggedIn(req, res, next) { // req.user
 
 app.get('/auth/google', 
   passport.authenticate("google", {
-    scope: ["email"]
+    scope: ["email"],
+    accessType: "offline",
+    prompt: "consent",
   })
 );
 
